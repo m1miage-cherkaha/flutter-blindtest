@@ -1,5 +1,6 @@
 import 'package:blind_test/pages/background_layout.dart';
 import 'package:flutter/material.dart';
+import 'package:audioplayers/audioplayers.dart';
 import 'songs.dart';
 
 class GameStarted extends StatefulWidget {
@@ -24,6 +25,7 @@ class _GameStartedState extends State<GameStarted> {
   int score = 0;
   String selectedAnswer = '';
   bool isAnswerCorrect = false;
+  final AudioPlayer _audioPlayer = AudioPlayer();
 
   @override
   void initState() {
@@ -37,11 +39,23 @@ class _GameStartedState extends State<GameStarted> {
     possibleAnswers.shuffle();
     possibleAnswers = possibleAnswers.take(4).toList();
 
-    // S'assurer que la bonne chanson est parmi les réponses possibles
     if (!possibleAnswers.contains(currentSong)) {
       possibleAnswers[0] = currentSong;
       possibleAnswers.shuffle();
     }
+
+    playCurrentSong();
+  }
+
+  @override
+  void dispose() {
+    _audioPlayer.dispose();
+    super.dispose();
+  }
+
+  Future<void> playCurrentSong() async {
+    await _audioPlayer.stop(); // On stoppe avant de relancer une autre
+    await _audioPlayer.play(AssetSource(currentSong.path.replaceFirst('assets/', '')));
   }
 
   void checkAnswer(String answer) {
@@ -68,8 +82,10 @@ class _GameStartedState extends State<GameStarted> {
 
           selectedAnswer = '';
           isAnswerCorrect = false;
+          playCurrentSong();
           setState(() {});
         } else {
+          _audioPlayer.stop();
           showDialog(
             context: context,
             builder: (context) => AlertDialog(
@@ -103,7 +119,7 @@ class _GameStartedState extends State<GameStarted> {
             children: [
               Center(
                 child: Text(
-                  'Chanson à deviner: ${currentSong.title}',
+                  'Écoute et devine la chanson ! 🎵',
                   textAlign: TextAlign.center,
                   style: const TextStyle(
                     fontSize: 20,
@@ -113,6 +129,19 @@ class _GameStartedState extends State<GameStarted> {
                 ),
               ),
               const SizedBox(height: 40),
+              ElevatedButton(
+                onPressed: playCurrentSong, // Permet de réécouter
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.white,
+                  foregroundColor: Colors.black,
+                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+                ),
+                child: Text(
+                  'Réécouter la chanson 🔊',
+                  style: const TextStyle(fontSize: 18),
+                ),
+              ),
+              const SizedBox(height: 20),
               ...possibleAnswers.map((song) {
                 return Padding(
                   padding: const EdgeInsets.symmetric(vertical: 10),

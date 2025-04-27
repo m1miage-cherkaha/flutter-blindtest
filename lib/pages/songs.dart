@@ -12,15 +12,11 @@ class Song {
 }
 
 final List<Song> allSongs = [
-  Song(path: 'assets/songs/rap/booba1.mp3', title: 'Booba - DKR', category: 'Rap'),
-  Song(path: 'assets/songs/rap/nekfeu2.mp3', title: 'Nekfeu - On Verra', category: 'Rap'),
-  Song(path: 'assets/songs/rap/nekfeu2.mp3', title: 'Nekfeu - Humain', category: 'Rap'),
-  Song(path: 'assets/songs/rap/nekfeu2.mp3', title: 'Nekfeu - Ecrire', category: 'Rap'),
-  Song(path: 'assets/songs/rap/nekfeu2.mp3', title: 'Nekfeu - Juste pour voir', category: 'Rap'),
-  Song(path: 'assets/songs/rap/nekfeu2.mp3', title: 'SCH - Fusil', category: 'Rap'),
-  Song(path: 'assets/songs/rap/nekfeu2.mp3', title: 'SCH - Pharmacie', category: 'Rap'),
-  Song(path: 'assets/songs/rap/nekfeu2.mp3', title: 'SCH - Loup Noir', category: 'Rap'),
-  Song(path: 'assets/songs/rap/nekfeu2.mp3', title: 'SCH - Allo Maman', category: 'Rap'),
+  Song(path: 'assets/songs/rap/dkr.mp3', title: 'Booba - DKR', category: 'Rap'),
+  Song(path: 'assets/songs/rap/nekfeu.mp3', title: 'Nekfeu - On Verra', category: 'Rap'),
+  Song(path: 'assets/songs/rap/humain.mp3', title: 'Nekfeu - Humain', category: 'Rap'),
+  Song(path: 'assets/songs/rap/fusil.mp3', title: 'SCH - Fusil', category: 'Rap'),
+  Song(path: 'assets/songs/rap/LoupNoir.mp3', title: 'SCH - Loup Noir', category: 'Rap'),
   Song(path: 'assets/songs/rai/cheb_khaled1.mp3', title: 'Cheb Khaled - Aïcha', category: 'Rai'),
   Song(path: 'assets/songs/rai/cheb_mami2.mp3', title: 'Cheb Mami - Parisien du Nord', category: 'Rai'),
   Song(path: 'assets/songs/rai/cheb_khaled_didi.mp3', title: 'Cheb Khaled - Didi', category: 'Rai'),
