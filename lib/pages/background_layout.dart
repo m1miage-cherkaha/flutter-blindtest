@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+import 'home.dart' ;
 class BackgroundLayout extends StatelessWidget {
   final Widget child;
 
@@ -22,15 +22,25 @@ class BackgroundLayout extends StatelessWidget {
               padding: const EdgeInsets.fromLTRB(25.0, 25.0, 25.0, 0.0),
               child: Row(
                 children: [
-                  SizedBox(
-                    width: 70,
-                    height: 70,
-                    child: Center(
-                      child: Image.asset(
-                        'assets/images/logo.png',
-                        width: 60,
-                        height: 60,
-                        fit: BoxFit.contain,
+                  // GestureDetector autour du logo
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => Home(),  // Ici, nous naviguons directement vers Home()
+                        ),
+                      );                    },
+                    child: SizedBox(
+                      width: 70,
+                      height: 70,
+                      child: Center(
+                        child: Image.asset(
+                          'assets/images/logo.png',
+                          width: 60,
+                          height: 60,
+                          fit: BoxFit.contain,
+                        ),
                       ),
                     ),
                   ),

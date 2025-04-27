@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'background_layout.dart';
 import 'game.dart';
+
 class Home extends StatelessWidget {
   const Home({super.key});
 
@@ -17,47 +18,34 @@ class Home extends StatelessWidget {
           CategoryCard(
             title: 'Rap',
             imagePath: 'assets/images/rap.jpg',
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const Game()),
-              );             },
+            songFolderPath: 'assets/songs/rap/',
           ),
           CategoryCard(
-            title: 'Raï',
+            title: 'Rai',
             imagePath: 'assets/images/rai.jpg',
-            onTap: () {
-                        },
+            songFolderPath: 'assets/songs/rai/',
           ),
           CategoryCard(
             title: 'Pop',
             imagePath: 'assets/images/pop.jpg',
-            onTap: () {
-              // NAVIGATIOOOOOON
-            },
+            songFolderPath: 'assets/songs/pop/',
           ),
           CategoryCard(
             title: 'R&B',
             imagePath: 'assets/images/rb.png',
-            onTap: () {
-              // NAVIGATIOOOOOON
-            },
+            songFolderPath: 'assets/songs/rb/',
           ),
           CategoryCard(
             title: "2000's",
             imagePath: 'assets/images/2000.png',
-            onTap: () {
-              // NAVIGATIOOOOOON
-            },
+            songFolderPath: 'assets/songs/2000/',
           ),
           CategoryCard(
             title: 'Rock',
             imagePath: 'assets/images/rock.jpg',
-            onTap: () {
-              // NAVIGATIOOOOOON
-            },
+            songFolderPath: 'assets/songs/rock/',
           ),
-        ]
+        ],
       ),
     );
   }
@@ -66,13 +54,13 @@ class Home extends StatelessWidget {
 class CategoryCard extends StatelessWidget {
   final String title;
   final String imagePath;
-  final VoidCallback onTap;
+  final String songFolderPath;
 
   const CategoryCard({
     Key? key,
     required this.title,
     required this.imagePath,
-    required this.onTap,
+    required this.songFolderPath,
   }) : super(key: key);
 
   @override
@@ -84,7 +72,18 @@ class CategoryCard extends StatelessWidget {
       ),
       clipBehavior: Clip.hardEdge,
       child: InkWell(
-        onTap: onTap,
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => Game(
+                title: title,
+                imagePath: imagePath,
+                songFolderPath: songFolderPath,
+              ),
+            ),
+          );
+        },
         child: Stack(
           children: [
             Positioned.fill(
