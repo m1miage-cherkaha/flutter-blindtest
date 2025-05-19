@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'background_layout.dart';
+import '../widgets/background_layout.dart';
 import 'game.dart';
 
 class Home extends StatelessWidget {

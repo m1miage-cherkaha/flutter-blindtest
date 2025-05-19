@@ -1,7 +1,8 @@
-import 'package:blind_test/pages/background_layout.dart';
+import 'package:blind_test/services/audioService.dart';
+import 'package:blind_test/widgets/background_layout.dart';
 import 'package:flutter/material.dart';
 import 'package:audioplayers/audioplayers.dart';
-import 'songs.dart';
+import '../models/songs.dart';
 
 class GameStarted extends StatefulWidget {
   final String songFolderPath;
@@ -25,13 +26,14 @@ class _GameStartedState extends State<GameStarted> {
   int score = 0;
   String selectedAnswer = '';
   bool isAnswerCorrect = false;
-  final AudioPlayer _audioPlayer = AudioPlayer();
+  final AudioService _audioService = AudioService();
 
   @override
   void initState() {
     super.initState();
 
-    categorySongs = allSongs.where((song) => song.category == widget.category).toList();
+    categorySongs =
+        allSongs.where((song) => song.category == widget.category).toList();
     categorySongs.shuffle();
 
     currentSong = categorySongs[currentIndex];
@@ -49,13 +51,13 @@ class _GameStartedState extends State<GameStarted> {
 
   @override
   void dispose() {
-    _audioPlayer.dispose();
+    _audioService.dispose();
     super.dispose();
   }
 
   Future<void> playCurrentSong() async {
-    await _audioPlayer.stop(); // On stoppe avant de relancer une autre
-    await _audioPlayer.play(AssetSource(currentSong.path.replaceFirst('assets/', '')));
+    // On stoppe avant de relancer une autre
+    await _audioService.playCurrentSong(currentSong);
   }
 
   void checkAnswer(String answer) {
@@ -67,6 +69,7 @@ class _GameStartedState extends State<GameStarted> {
         score++;
       }
 
+      // charger la prochaine question
       Future.delayed(Duration(seconds: 1), () {
         if (currentIndex < 4) {
           currentIndex++;
@@ -85,22 +88,23 @@ class _GameStartedState extends State<GameStarted> {
           playCurrentSong();
           setState(() {});
         } else {
-          _audioPlayer.stop();
+          _audioService.stop();
           showDialog(
             context: context,
-            builder: (context) => AlertDialog(
-              title: Text('Le jeu est terminé'),
-              content: Text('Ton score: $score/5'),
-              actions: [
-                TextButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                    Navigator.pop(context);
-                  },
-                  child: Text('Retour à l\'accueil'),
+            builder:
+                (context) => AlertDialog(
+                  title: Text('Le jeu est terminé'),
+                  content: Text('Ton score: $score/5'),
+                  actions: [
+                    TextButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                        Navigator.pop(context);
+                      },
+                      child: Text('Retour à l\'accueil'),
+                    ),
+                  ],
                 ),
-              ],
-            ),
           );
         }
       });
@@ -134,7 +138,10 @@ class _GameStartedState extends State<GameStarted> {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.white,
                   foregroundColor: Colors.black,
-                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 20,
+                    vertical: 15,
+                  ),
                 ),
                 child: Text(
                   'Réécouter la chanson 🔊',
@@ -151,9 +158,10 @@ class _GameStartedState extends State<GameStarted> {
                       onPressed: () => checkAnswer(song.title),
                       style: ElevatedButton.styleFrom(
                         padding: const EdgeInsets.symmetric(vertical: 20),
-                        backgroundColor: selectedAnswer == song.title
-                            ? (isAnswerCorrect ? Colors.green : Colors.red)
-                            : Colors.white,
+                        backgroundColor:
+                            selectedAnswer == song.title
+                                ? (isAnswerCorrect ? Colors.green : Colors.red)
+                                : Colors.white,
                         foregroundColor: Colors.black87,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(5),
@@ -171,7 +179,10 @@ class _GameStartedState extends State<GameStarted> {
               const SizedBox(height: 40),
               Text(
                 'Score: $score/${currentIndex + 1}',
-                style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                style: const TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ],
           ),

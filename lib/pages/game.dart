@@ -1,6 +1,6 @@
 import 'package:blind_test/pages/game_started.dart';
 import 'package:flutter/material.dart';
-import 'background_layout.dart';
+import '../widgets/background_layout.dart';
 import 'game_started.dart';
 
 class Game extends StatelessWidget {

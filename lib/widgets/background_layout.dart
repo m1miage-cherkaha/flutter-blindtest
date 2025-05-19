@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'home.dart' ;
+import '../pages/home.dart' ;
 class BackgroundLayout extends StatelessWidget {
   final Widget child;
 
