@@ -1,7 +1,8 @@
 import 'package:blind_test/services/audioService.dart';
+import 'package:blind_test/services/gameService.dart';
+import 'package:blind_test/services/scoreService.dart';
 import 'package:blind_test/widgets/background_layout.dart';
 import 'package:flutter/material.dart';
-import 'package:audioplayers/audioplayers.dart';
 import '../models/songs.dart';
 
 class GameStarted extends StatefulWidget {
@@ -19,96 +20,41 @@ class GameStarted extends StatefulWidget {
 }
 
 class _GameStartedState extends State<GameStarted> {
-  late List<Song> categorySongs;
-  late Song currentSong;
-  late List<Song> possibleAnswers;
-  int currentIndex = 0;
-  int score = 0;
-  String selectedAnswer = '';
-  bool isAnswerCorrect = false;
-  final AudioService _audioService = AudioService();
-
+  late GameService _gameService;
   @override
   void initState() {
     super.initState();
+    _gameService = GameService(scoreservice: Scoreservice());
+    _gameService.initializeGame(widget.category, allSongs);
 
-    categorySongs =
-        allSongs.where((song) => song.category == widget.category).toList();
-    categorySongs.shuffle();
-
-    currentSong = categorySongs[currentIndex];
-    possibleAnswers = List.from(categorySongs);
-    possibleAnswers.shuffle();
-    possibleAnswers = possibleAnswers.take(4).toList();
-
-    if (!possibleAnswers.contains(currentSong)) {
-      possibleAnswers[0] = currentSong;
-      possibleAnswers.shuffle();
-    }
-
-    playCurrentSong();
   }
 
   @override
   void dispose() {
-    _audioService.dispose();
+    _gameService.dispose();
     super.dispose();
   }
 
-  Future<void> playCurrentSong() async {
-    // On stoppe avant de relancer une autre
-    await _audioService.playCurrentSong(currentSong);
-  }
-
-  void checkAnswer(String answer) {
-    setState(() {
-      selectedAnswer = answer;
-      isAnswerCorrect = selectedAnswer == currentSong.title;
-
-      if (isAnswerCorrect) {
-        score++;
-      }
-
-      // charger la prochaine question
-      Future.delayed(Duration(seconds: 1), () {
-        if (currentIndex < 4) {
-          currentIndex++;
-          currentSong = categorySongs[currentIndex];
-          possibleAnswers = List.from(categorySongs);
-          possibleAnswers.shuffle();
-          possibleAnswers = possibleAnswers.take(4).toList();
-
-          if (!possibleAnswers.contains(currentSong)) {
-            possibleAnswers[0] = currentSong;
-            possibleAnswers.shuffle();
-          }
-
-          selectedAnswer = '';
-          isAnswerCorrect = false;
-          playCurrentSong();
-          setState(() {});
-        } else {
-          _audioService.stop();
-          showDialog(
-            context: context,
-            builder:
-                (context) => AlertDialog(
-                  title: Text('Le jeu est terminé'),
-                  content: Text('Ton score: $score/5'),
-                  actions: [
-                    TextButton(
-                      onPressed: () {
-                        Navigator.pop(context);
-                        Navigator.pop(context);
-                      },
-                      child: Text('Retour à l\'accueil'),
-                    ),
-                  ],
-                ),
-          );
-        }
-      });
-    });
+  void _showGameOverDialog() async {
+    final save = await _gameService.scoreservice.saveBestScore(_gameService.score);
+    final bestScore = await _gameService.scoreservice.getBestScore();
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Le jeu est terminé'),
+        content: Text('Ton score: ${_gameService.score}/${_gameService.maxQuestions}\n'
+        'Meilleur Score : $bestScore'),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+              Navigator.pop(context);
+            },
+            child: Text('Retour à l\'accueil'),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
@@ -134,7 +80,7 @@ class _GameStartedState extends State<GameStarted> {
               ),
               const SizedBox(height: 40),
               ElevatedButton(
-                onPressed: playCurrentSong, // Permet de réécouter
+                onPressed: _gameService.playCurrentSong,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.white,
                   foregroundColor: Colors.black,
@@ -149,19 +95,22 @@ class _GameStartedState extends State<GameStarted> {
                 ),
               ),
               const SizedBox(height: 20),
-              ...possibleAnswers.map((song) {
+              ..._gameService.possibleAnswers.map((song) {
                 return Padding(
                   padding: const EdgeInsets.symmetric(vertical: 10),
                   child: Container(
                     width: 350,
                     child: ElevatedButton(
-                      onPressed: () => checkAnswer(song.title),
+                      onPressed: () => _gameService.checkAnswer(
+                        song.title,
+                        setState,
+                        _showGameOverDialog,
+                      ),
                       style: ElevatedButton.styleFrom(
                         padding: const EdgeInsets.symmetric(vertical: 20),
-                        backgroundColor:
-                            selectedAnswer == song.title
-                                ? (isAnswerCorrect ? Colors.green : Colors.red)
-                                : Colors.white,
+                        backgroundColor: _gameService.selectedAnswer == song.title
+                            ? (_gameService.isAnswerCorrect ? Colors.green : Colors.red)
+                            : Colors.white,
                         foregroundColor: Colors.black87,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(5),
@@ -178,7 +127,7 @@ class _GameStartedState extends State<GameStarted> {
               }).toList(),
               const SizedBox(height: 40),
               Text(
-                'Score: $score/${currentIndex + 1}',
+                'Score: ${_gameService.score}/${_gameService.currentIndex + 1}',
                 style: const TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
