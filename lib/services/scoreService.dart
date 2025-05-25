@@ -2,7 +2,11 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class Scoreservice{
 
-  //Ajouter Singleton ICI
+  //SINGLETON
+  static final Scoreservice _sharedInstance = Scoreservice._internal();
+  factory Scoreservice()  => _sharedInstance;
+  Scoreservice._internal();
+
   static const String _bestScoreKey = 'best_score';
 
   Future<int> saveBestScore(int score) async {

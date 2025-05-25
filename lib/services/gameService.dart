@@ -3,8 +3,8 @@ import 'package:blind_test/services/audioService.dart';
 import 'package:blind_test/services/scoreService.dart';
 
 class GameService {
-  //AJOUTER SINGLETON ICI
-  final Scoreservice scoreservice;
+  final Scoreservice scoreService = Scoreservice();
+  final AudioService audioService = AudioService();
   List<Song> categorySongs = [];
   late Song currentSong;
   List<Song> possibleAnswers = [];
@@ -13,8 +13,6 @@ class GameService {
   String selectedAnswer = '';
   bool isAnswerCorrect = false;
   final int maxQuestions = 5;
-
-  GameService({required this.scoreservice});
 
   void initializeGame(String category, List<Song> allSongs) {
     categorySongs = allSongs.where((song) => song.category == category).toList();
@@ -39,7 +37,7 @@ class GameService {
   }
 
   Future<void> playCurrentSong() async {
-    await AudioService().playCurrentSong(currentSong);
+    await audioService.playCurrentSong(currentSong);
   }
 
   void checkAnswer(String answer, Function setState, Function showGameOver) {
@@ -58,8 +56,8 @@ class GameService {
         _loadNextSong();
         setState(() {});
       } else {
-        AudioService().stop();
-        scoreservice.saveBestScore(score);
+        audioService.stop();
+        scoreService.saveBestScore(score);
         showGameOver();
       }
     });
@@ -70,6 +68,6 @@ class GameService {
   }
 
   void dispose() {
-    AudioService().dispose();
+    audioService.dispose();
   }
 }

@@ -1,7 +1,6 @@
-import 'package:blind_test/services/audioService.dart';
 import 'package:blind_test/services/gameService.dart';
-import 'package:blind_test/services/scoreService.dart';
 import 'package:blind_test/widgets/background_layout.dart';
+import 'package:blind_test/widgets/countdowntimer.dart';
 import 'package:flutter/material.dart';
 import '../models/songs.dart';
 
@@ -20,13 +19,13 @@ class GameStarted extends StatefulWidget {
 }
 
 class _GameStartedState extends State<GameStarted> {
-  late GameService _gameService;
+  late final GameService _gameService;
+
   @override
   void initState() {
     super.initState();
-    _gameService = GameService(scoreservice: Scoreservice());
+    _gameService = GameService();
     _gameService.initializeGame(widget.category, allSongs);
-
   }
 
   @override
@@ -36,24 +35,27 @@ class _GameStartedState extends State<GameStarted> {
   }
 
   void _showGameOverDialog() async {
-    final save = await _gameService.scoreservice.saveBestScore(_gameService.score);
-    final bestScore = await _gameService.scoreservice.getBestScore();
+    await _gameService.scoreService.saveBestScore(_gameService.score);
+    final bestScore = await _gameService.scoreService.getBestScore();
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        title: Text('Le jeu est terminé'),
-        content: Text('Ton score: ${_gameService.score}/${_gameService.maxQuestions}\n'
-        'Meilleur Score : $bestScore'),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.pop(context);
-              Navigator.pop(context);
-            },
-            child: Text('Retour à l\'accueil'),
+      builder:
+          (context) => AlertDialog(
+            title: Text('Le jeu est terminé'),
+            content: Text(
+              'Ton score: ${_gameService.score}/${_gameService.maxQuestions}\n'
+              'Meilleur Score : $bestScore',
+            ),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                  Navigator.pop(context);
+                },
+                child: Text('Retour à l\'accueil'),
+              ),
+            ],
           ),
-        ],
-      ),
     );
   }
 
@@ -78,39 +80,65 @@ class _GameStartedState extends State<GameStarted> {
                   ),
                 ),
               ),
-              const SizedBox(height: 40),
-              ElevatedButton(
-                onPressed: _gameService.playCurrentSong,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.white,
-                  foregroundColor: Colors.black,
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 20,
-                    vertical: 15,
+              //Timer
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  CountdownTimer(
+                    key: ValueKey(_gameService.currentIndex),
+                    duration: 20,
+                    onFinished: () {
+                      // Si l'utilisateur n'a pas répondu à temps
+                      if (_gameService.selectedAnswer == '') {
+                        _gameService.checkAnswer(
+                          '',
+                          setState,
+                          _showGameOverDialog,
+                        );
+                      }
+                    },
                   ),
-                ),
-                child: Text(
-                  'Réécouter la chanson 🔊',
-                  style: const TextStyle(fontSize: 18),
-                ),
+                  const SizedBox(height: 20),
+                  const SizedBox(height: 40),
+                  ElevatedButton(
+                    onPressed: _gameService.playCurrentSong,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.white,
+                      foregroundColor: Colors.black,
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 20,
+                        vertical: 15,
+                      ),
+                    ),
+                    child: Text(
+                      'Réécouter la chanson 🔊',
+                      style: const TextStyle(fontSize: 18),
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                ],
               ),
-              const SizedBox(height: 20),
               ..._gameService.possibleAnswers.map((song) {
                 return Padding(
                   padding: const EdgeInsets.symmetric(vertical: 10),
                   child: Container(
                     width: 350,
                     child: ElevatedButton(
-                      onPressed: () => _gameService.checkAnswer(
-                        song.title,
-                        setState,
-                        _showGameOverDialog,
-                      ),
+                      onPressed:
+                          () => _gameService.checkAnswer(
+                            song.title,
+                            setState,
+                            _showGameOverDialog,
+                          ),
                       style: ElevatedButton.styleFrom(
                         padding: const EdgeInsets.symmetric(vertical: 20),
-                        backgroundColor: _gameService.selectedAnswer == song.title
-                            ? (_gameService.isAnswerCorrect ? Colors.green : Colors.red)
-                            : Colors.white,
+                        backgroundColor:
+                            _gameService.selectedAnswer == song.title
+                                ? (_gameService.isAnswerCorrect
+                                    ? Colors.green
+                                    : Colors.red)
+                                : Colors.white,
                         foregroundColor: Colors.black87,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(5),
