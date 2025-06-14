@@ -69,20 +69,9 @@ class _GameStartedState extends State<GameStarted> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Center(
-                child: Text(
-                  'Écoute et devine la chanson ! 🎵',
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
-                ),
-              ),
               //Timer
               Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   CountdownTimer(
@@ -101,22 +90,22 @@ class _GameStartedState extends State<GameStarted> {
                   ),
                   const SizedBox(height: 20),
                   const SizedBox(height: 40),
-                  ElevatedButton(
-                    onPressed: _gameService.playCurrentSong,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.white,
-                      foregroundColor: Colors.black,
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 20,
-                        vertical: 15,
-                      ),
-                    ),
-                    child: Text(
-                      'Réécouter la chanson 🔊',
-                      style: const TextStyle(fontSize: 18),
-                    ),
-                  ),
-                  const SizedBox(height: 20),
+                  // ElevatedButton(
+                  //   onPressed: _gameService.playCurrentSong,
+                  //   style: ElevatedButton.styleFrom(
+                  //     backgroundColor: Colors.white,
+                  //     foregroundColor: Colors.black,
+                  //     padding: const EdgeInsets.symmetric(
+                  //       horizontal: 20,
+                  //       vertical: 15,
+                  //     ),
+                  //   ),
+                  //   child: Text(
+                  //     'Réécouter la chanson 🔊',
+                  //     style: const TextStyle(fontSize: 18),
+                  //   ),
+                  // ),
+                  // const SizedBox(height: 20),
                 ],
               ),
               ..._gameService.possibleAnswers.map((song) {
