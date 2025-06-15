@@ -3,7 +3,6 @@ import '../models/songs.dart';
 
 class AudioService {
 
-  // Singleton Pattern
   static final AudioService _sharedInstance =  AudioService._internal();
   factory AudioService() => _sharedInstance;
   AudioService._internal();
@@ -11,7 +10,7 @@ class AudioService {
   final AudioPlayer _audioPlayer = AudioPlayer();
 
   Future<void> playCurrentSong(Song song) async {
-    await _audioPlayer.stop(); // On stoppe avant de relancer une autre
+    await _audioPlayer.stop();
     await _audioPlayer.play(AssetSource(song.path.replaceFirst('assets/', '')));
   }
 

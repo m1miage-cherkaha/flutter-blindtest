@@ -28,17 +28,24 @@ class _CountdownTimerState extends State<CountdownTimer> {
   void _startCountdown() {
     _remaining = widget.duration;
     _timer = Timer.periodic(Duration(seconds: 1), (timer) {
+      if(!mounted) return;
       if (_remaining > 0) {
         setState(() {
           _remaining--;
         });
       } else {
-        timer.cancel(); // arrêter le timer proprement
+        timer.cancel();
         if(widget.onFinished != null){
           widget.onFinished!();
         }
       }
     });
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
   }
 
   @override
