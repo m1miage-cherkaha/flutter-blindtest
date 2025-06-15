@@ -7,11 +7,13 @@ import '../models/songs.dart';
 class GameStarted extends StatefulWidget {
   final String songFolderPath;
   final String category;
+  final String level;
 
   const GameStarted({
     Key? key,
     required this.songFolderPath,
     required this.category,
+    required this.level
   }) : super(key: key);
 
   @override
