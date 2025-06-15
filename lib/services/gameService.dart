@@ -3,6 +3,10 @@ import 'package:blind_test/services/audioService.dart';
 import 'package:blind_test/services/scoreService.dart';
 
 class GameService {
+  static final GameService _instance = GameService._internal();
+  factory GameService() => _instance;
+  GameService._internal();
+
   final Scoreservice scoreService = Scoreservice();
   final AudioService audioService = AudioService();
   List<Song> categorySongs = [];
@@ -17,6 +21,10 @@ class GameService {
   void initializeGame(String category, List<Song> allSongs) {
     categorySongs = allSongs.where((song) => song.category == category).toList();
     categorySongs.shuffle();
+    currentIndex = 0;
+    score = 0;
+    selectedAnswer = '';
+    isAnswerCorrect = false;
     _loadNextSong();
   }
 
@@ -30,6 +38,7 @@ class GameService {
         possibleAnswers[0] = currentSong;
         possibleAnswers.shuffle();
       }
+
       selectedAnswer = '';
       isAnswerCorrect = false;
       playCurrentSong();
@@ -37,10 +46,11 @@ class GameService {
   }
 
   Future<void> playCurrentSong() async {
+    print("Playing: ${currentSong.title}");
     await audioService.playCurrentSong(currentSong);
   }
 
-  void checkAnswer(String answer, Function setState, Function showGameOver) {
+  Future<bool> checkAnswer(String answer) async {
     selectedAnswer = answer;
     isAnswerCorrect = selectedAnswer == currentSong.title;
 
@@ -48,26 +58,20 @@ class GameService {
       score++;
     }
 
-    setState(() {});
+    await Future.delayed(Duration(seconds: 1));
 
-    Future.delayed(Duration(seconds: 1), () {
-      if (currentIndex < maxQuestions - 1) {
-        currentIndex++;
-        _loadNextSong();
-        setState(() {});
-      } else {
-        audioService.stop();
-        scoreService.saveBestScore(score);
-        showGameOver();
-      }
-    });
-  }
-
-  bool isGameOver() {
-    return currentIndex >= maxQuestions - 1;
+    if (currentIndex < maxQuestions - 1) {
+      currentIndex++;
+      _loadNextSong();
+      return false;
+    } else {
+      audioService.stop();
+      await scoreService.saveBestScore(score);
+      return true;
+    }
   }
 
   void dispose() {
-    audioService.dispose();
+    audioService.stop();
   }
 }

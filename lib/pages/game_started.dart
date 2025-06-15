@@ -35,28 +35,66 @@ class _GameStartedState extends State<GameStarted> {
   }
 
   void _showGameOverDialog() async {
-    await _gameService.scoreService.saveBestScore(_gameService.score);
     final bestScore = await _gameService.scoreService.getBestScore();
+
     showDialog(
       context: context,
-      builder:
-          (context) => AlertDialog(
-            title: Text('Le jeu est terminé'),
-            content: Text(
-              'Ton score: ${_gameService.score}/${_gameService.maxQuestions}\n'
-              'Meilleur Score : $bestScore',
+      barrierDismissible: false,
+      builder: (context) => AlertDialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+        ),
+        title: Text(
+          'Le jeu est terminé',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Score : ${_gameService.score}/${_gameService.maxQuestions}',
+              style: TextStyle(fontSize: 16),
             ),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                  Navigator.pop(context);
-                },
-                child: Text('Retour à l\'accueil'),
-              ),
-            ],
+            SizedBox(height: 8),
+            Text(
+              'Meilleur score : $bestScore',
+              style: TextStyle(fontSize: 14, color: Colors.grey[600]),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+              Navigator.pop(context);
+            },
+            child: Text('Rejouer'),
           ),
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context); // Ferme le dialog
+              Navigator.pop(context); // GameStarted
+              Navigator.pop(context); // Game
+            },
+            child: Text('Accueil'),
+          ),
+        ],
+      ),
     );
+  }
+
+
+  void _handleAnswer(String answer) async {
+    setState(() {});
+
+    bool isGameOver = await _gameService.checkAnswer(answer);
+
+    setState(() {});
+
+    if (isGameOver) {
+      _showGameOverDialog();
+    }
   }
 
   @override
@@ -80,7 +118,7 @@ class _GameStartedState extends State<GameStarted> {
                   ),
                 ),
               ),
-              //Timer
+              // Timer
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -89,13 +127,8 @@ class _GameStartedState extends State<GameStarted> {
                     key: ValueKey(_gameService.currentIndex),
                     duration: 20,
                     onFinished: () {
-                      // Si l'utilisateur n'a pas répondu à temps
                       if (_gameService.selectedAnswer == '') {
-                        _gameService.checkAnswer(
-                          '',
-                          setState,
-                          _showGameOverDialog,
-                        );
+                        _handleAnswer('');
                       }
                     },
                   ),
@@ -111,9 +144,9 @@ class _GameStartedState extends State<GameStarted> {
                         vertical: 15,
                       ),
                     ),
-                    child: Text(
+                    child: const Text(
                       'Réécouter la chanson 🔊',
-                      style: const TextStyle(fontSize: 18),
+                      style: TextStyle(fontSize: 18),
                     ),
                   ),
                   const SizedBox(height: 20),
@@ -125,20 +158,15 @@ class _GameStartedState extends State<GameStarted> {
                   child: Container(
                     width: 350,
                     child: ElevatedButton(
-                      onPressed:
-                          () => _gameService.checkAnswer(
-                            song.title,
-                            setState,
-                            _showGameOverDialog,
-                          ),
+                      onPressed: () => _handleAnswer(song.title),
                       style: ElevatedButton.styleFrom(
                         padding: const EdgeInsets.symmetric(vertical: 20),
                         backgroundColor:
-                            _gameService.selectedAnswer == song.title
-                                ? (_gameService.isAnswerCorrect
-                                    ? Colors.green
-                                    : Colors.red)
-                                : Colors.white,
+                        _gameService.selectedAnswer == song.title
+                            ? (_gameService.isAnswerCorrect
+                            ? Colors.green
+                            : Colors.red)
+                            : Colors.white,
                         foregroundColor: Colors.black87,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(5),
