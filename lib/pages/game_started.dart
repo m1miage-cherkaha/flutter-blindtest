@@ -2,6 +2,7 @@ import 'package:blind_test/services/gameService.dart';
 import 'package:blind_test/widgets/background_layout.dart';
 import 'package:blind_test/widgets/countdowntimer.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import '../models/songs.dart';
 
 class GameStarted extends StatefulWidget {
@@ -13,7 +14,7 @@ class GameStarted extends StatefulWidget {
     Key? key,
     required this.songFolderPath,
     required this.category,
-    required this.level
+    required this.level,
   }) : super(key: key);
 
   @override
@@ -42,50 +43,50 @@ class _GameStartedState extends State<GameStarted> {
     showDialog(
       context: context,
       barrierDismissible: false,
-      builder: (context) => AlertDialog(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
-        ),
-        title: Text(
-          'Le jeu est terminé',
-          style: TextStyle(fontWeight: FontWeight.bold),
-        ),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Score : ${_gameService.score}/${_gameService.maxQuestions}',
-              style: TextStyle(fontSize: 16),
+      builder:
+          (context) => AlertDialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16),
             ),
-            SizedBox(height: 8),
-            Text(
-              'Meilleur score : $bestScore',
-              style: TextStyle(fontSize: 14, color: Colors.grey[600]),
+            title: Text(
+              'Le jeu est terminé',
+              style: TextStyle(fontWeight: FontWeight.bold),
             ),
-          ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.pop(context);
-              Navigator.pop(context);
-            },
-            child: Text('Rejouer'),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Score : ${_gameService.score}/${_gameService.maxQuestions}',
+                  style: TextStyle(fontSize: 16),
+                ),
+                SizedBox(height: 8),
+                Text(
+                  'Meilleur score : $bestScore',
+                  style: TextStyle(fontSize: 14, color: Colors.grey[600]),
+                ),
+              ],
+            ),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                  Navigator.pop(context);
+                },
+                child: Text('Rejouer'),
+              ),
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context); // Ferme le dialog
+                  Navigator.pop(context); // GameStarted
+                  Navigator.pop(context); // Game
+                },
+                child: Text('Accueil'),
+              ),
+            ],
           ),
-          TextButton(
-            onPressed: () {
-              Navigator.pop(context); // Ferme le dialog
-              Navigator.pop(context); // GameStarted
-              Navigator.pop(context); // Game
-            },
-            child: Text('Accueil'),
-          ),
-        ],
-      ),
     );
   }
-
 
   void _handleAnswer(String answer) async {
     setState(() {});
@@ -108,76 +109,66 @@ class _GameStartedState extends State<GameStarted> {
           padding: const EdgeInsets.only(top: 60),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Center(
-                child: Text(
-                  'Écoute et devine la chanson ! 🎵',
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
-                ),
-              ),
-              //Timer
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  CountdownTimer(
-                    key: ValueKey(_gameService.currentIndex),
-                    duration: 20,
-                    onFinished: () {
-                      if (_gameService.selectedAnswer == '') {
-                        _handleAnswer('');
-                      }
-                    },
-                  ),
-                  const SizedBox(height: 20),
-                  const SizedBox(height: 40),
-                  ElevatedButton(
-                    onPressed: _gameService.playCurrentSong,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.white,
-                      foregroundColor: Colors.black,
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 20,
-                        vertical: 15,
+                  const SizedBox(width: 20),
+                  widget.level == "Difficile"
+                      ?
+                      //Timer
+                      CountdownTimer(
+                        key: ValueKey(_gameService.currentIndex),
+                        duration: 20,
+                        onFinished: () {
+                          if (_gameService.selectedAnswer == '') {
+                            _handleAnswer('');
+                          }
+                        },
+                      )
+                      : ElevatedButton(
+                        onPressed: _gameService.playCurrentSong,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.white,
+                          foregroundColor: Colors.black,
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 20,
+                            vertical: 15,
+                          ),
+                        ),
+                        child: const Icon(Icons.refresh_rounded, size: 28),
                       ),
-                    ),
-                    child: const Text(
-                      'Réécouter la chanson 🔊',
-                      style: TextStyle(fontSize: 18),
-                    ),
-                  ),
-                  const SizedBox(height: 20),
                 ],
               ),
+              const SizedBox(height: 20),
+
               ..._gameService.possibleAnswers.map((song) {
                 return Padding(
                   padding: const EdgeInsets.symmetric(vertical: 10),
-                  child: Container(
-                    width: 350,
-                    child: ElevatedButton(
-                      onPressed: () => _handleAnswer(song.title),
-                      style: ElevatedButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(vertical: 20),
-                        backgroundColor:
-                        _gameService.selectedAnswer == song.title
-                            ? (_gameService.isAnswerCorrect
-                            ? Colors.green
-                            : Colors.red)
-                            : Colors.white,
-                        foregroundColor: Colors.black87,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(5),
+                  child: Center(
+                    child: SizedBox(
+                      width: 350,
+                      child: ElevatedButton(
+                        onPressed: () => _handleAnswer(song.title),
+                        style: ElevatedButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(vertical: 20),
+                          backgroundColor:
+                              _gameService.selectedAnswer == song.title
+                                  ? (_gameService.isAnswerCorrect
+                                      ? Colors.green
+                                      : Colors.red)
+                                  : Colors.white,
+                          foregroundColor: Colors.black87,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(5),
+                          ),
                         ),
-                      ),
-                      child: Text(
-                        song.title,
-                        textAlign: TextAlign.center,
-                        style: const TextStyle(fontSize: 20),
+                        child: Text(
+                          song.title,
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(fontSize: 20),
+                        ),
                       ),
                     ),
                   ),
@@ -198,21 +189,3 @@ class _GameStartedState extends State<GameStarted> {
     );
   }
 }
-
-// REPLAY SONG
-// ElevatedButton(
-//   onPressed: _gameService.playCurrentSong,
-//   style: ElevatedButton.styleFrom(
-//     backgroundColor: Colors.white,
-//     foregroundColor: Colors.black,
-//     padding: const EdgeInsets.symmetric(
-//       horizontal: 20,
-//       vertical: 15,
-//     ),
-//   ),
-//   child: Text(
-//     'Réécouter la chanson 🔊',
-//     style: const TextStyle(fontSize: 18),
-//   ),
-// ),
-// const SizedBox(height: 20),
