@@ -90,24 +90,6 @@ class _GameStartedState extends State<GameStarted> {
                       }
                     },
                   ),
-                  const SizedBox(height: 20),
-                  const SizedBox(height: 40),
-                  // ElevatedButton(
-                  //   onPressed: _gameService.playCurrentSong,
-                  //   style: ElevatedButton.styleFrom(
-                  //     backgroundColor: Colors.white,
-                  //     foregroundColor: Colors.black,
-                  //     padding: const EdgeInsets.symmetric(
-                  //       horizontal: 20,
-                  //       vertical: 15,
-                  //     ),
-                  //   ),
-                  //   child: Text(
-                  //     'Réécouter la chanson 🔊',
-                  //     style: const TextStyle(fontSize: 18),
-                  //   ),
-                  // ),
-                  // const SizedBox(height: 20),
                 ],
               ),
               ..._gameService.possibleAnswers.map((song) {
@@ -159,3 +141,21 @@ class _GameStartedState extends State<GameStarted> {
     );
   }
 }
+
+// REPLAY SONG
+// ElevatedButton(
+//   onPressed: _gameService.playCurrentSong,
+//   style: ElevatedButton.styleFrom(
+//     backgroundColor: Colors.white,
+//     foregroundColor: Colors.black,
+//     padding: const EdgeInsets.symmetric(
+//       horizontal: 20,
+//       vertical: 15,
+//     ),
+//   ),
+//   child: Text(
+//     'Réécouter la chanson 🔊',
+//     style: const TextStyle(fontSize: 18),
+//   ),
+// ),
+// const SizedBox(height: 20),
