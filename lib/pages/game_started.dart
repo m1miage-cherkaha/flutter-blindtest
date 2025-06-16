@@ -137,7 +137,11 @@ class _GameStartedState extends State<GameStarted> {
                             vertical: 15,
                           ),
                         ),
-                        child: const Icon(Icons.refresh_rounded, size: 28),
+                        child : SvgPicture.asset('assets/icons/music_replay.svg',
+                          height: 28,
+                          width: 28,
+                          colorFilter: const ColorFilter.mode(Colors.black, BlendMode.srcIn),)
+                        // child: const Icon(Icons.refresh_rounded, size: 28),
                       ),
                 ],
               ),
