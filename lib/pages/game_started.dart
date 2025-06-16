@@ -24,6 +24,8 @@ class GameStarted extends StatefulWidget {
 class _GameStartedState extends State<GameStarted> {
   late final GameService _gameService;
 
+  bool showImage = false;
+
   @override
   void initState() {
     super.initState();
@@ -89,11 +91,15 @@ class _GameStartedState extends State<GameStarted> {
   }
 
   void _handleAnswer(String answer) async {
-    setState(() {});
+    setState(() {
+      showImage = true;
+    });
 
     bool isGameOver = await _gameService.checkAnswer(answer);
 
-    setState(() {});
+    setState(() {
+      showImage = false;
+    });
 
     if (isGameOver) {
       _showGameOverDialog();
@@ -106,11 +112,24 @@ class _GameStartedState extends State<GameStarted> {
       child: Scaffold(
         backgroundColor: Colors.transparent,
         body: Padding(
-          padding: const EdgeInsets.only(top: 60),
+          padding: const EdgeInsets.only(top: 5),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
+              SizedBox(
+                height : 230,
+                width : 220,
+                child : Card(
+                    elevation: 4,
+                    shape : RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(5)
+                    ),
+                    clipBehavior: Clip.hardEdge,
+                    child : Image.asset('assets/images/2000.png', fit: BoxFit.cover,)
+
+                ),
+              ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
