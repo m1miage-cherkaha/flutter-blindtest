@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../pages/home.dart' ;
+import '../services/audioService.dart';
 class BackgroundLayout extends StatelessWidget {
   final Widget child;
 
@@ -22,13 +23,13 @@ class BackgroundLayout extends StatelessWidget {
               padding: const EdgeInsets.fromLTRB(25.0, 25.0, 25.0, 0.0),
               child: Row(
                 children: [
-                  // GestureDetector autour du logo
                   GestureDetector(
                     onTap: () {
+                     AudioService().stop();
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => Home(),  // Ici, nous naviguons directement vers Home()
+                          builder: (context) => Home(),
                         ),
                       );                    },
                     child: SizedBox(
