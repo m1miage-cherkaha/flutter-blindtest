@@ -143,7 +143,7 @@ class _GameStartedState extends State<GameStarted> {
                       //Timer
                       CountdownTimer(
                         key: ValueKey(_gameService.currentIndex),
-                        duration: 15,
+                        duration: 10,
                         onFinished: () {
                           if (_gameService.selectedAnswer == '') {
                             _handleAnswer('');
