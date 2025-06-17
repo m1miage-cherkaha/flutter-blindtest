@@ -1,16 +1,15 @@
 # blind_test
 
-A new Flutter project.
+TuneBoom ! 
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
+**Fonctionnalités à ajouter dans le future :** 
 
-A few resources to get you started if this is your first Flutter project:
+bouton indice dans le mode 'Facile' : donner des indices sur la chanson/artiste 
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+**Ajout de nouveau mode :**
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Devinez le Genre/Catégory de la chansons ! 
+
+Jouer contre un adversaire
