@@ -62,7 +62,9 @@ flutter:
 
   assets:
     - assets/images/
+    - assets/images/2000/
     - assets/songs/rap/
+    - assets/songs/2000/
     - assets/icons/
 
   # An image asset can refer to one or more resolution-specific "variants", see

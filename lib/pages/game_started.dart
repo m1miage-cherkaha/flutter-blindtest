@@ -126,7 +126,9 @@ class _GameStartedState extends State<GameStarted> {
                         borderRadius: BorderRadius.circular(5)
                     ),
                     clipBehavior: Clip.hardEdge,
-                    child : Image.asset('assets/images/2000.png', fit: BoxFit.cover,)
+                    child : Image.asset(
+                    showImage ? _gameService.currentSong.imagePath : 'assets/images/mark.png',
+                    fit : BoxFit.cover)
 
                 ),
               ),
