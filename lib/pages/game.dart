@@ -32,7 +32,6 @@ class _GameState extends State<Game> {
           child: Column(
             children: [
               const SizedBox(height: 20),
-
               // Bouton retour
               Align(
                 alignment: Alignment.centerLeft,

@@ -16,3 +16,12 @@ TuneBoom !
 Devinez le Genre/Catégory de la chanson ! 
 
 Jouer contre un adversaire
+
+**dépendances utilisés*
+
+- cupertino_icons ( pour le slide de mode "difficile,facile")
+- audioplayers
+- shared_preferences ( pour le stockage du meilleur score )
+- flutter_svg ( pour l'icone de relecture de musique )
+
+
