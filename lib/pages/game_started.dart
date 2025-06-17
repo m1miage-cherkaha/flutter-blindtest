@@ -24,6 +24,8 @@ class GameStarted extends StatefulWidget {
 class _GameStartedState extends State<GameStarted> {
   late final GameService _gameService;
 
+  bool showImage = false;
+
   @override
   void initState() {
     super.initState();
@@ -89,11 +91,15 @@ class _GameStartedState extends State<GameStarted> {
   }
 
   void _handleAnswer(String answer) async {
-    setState(() {});
+    setState(() {
+      showImage = true;
+    });
 
     bool isGameOver = await _gameService.checkAnswer(answer);
 
-    setState(() {});
+    setState(() {
+      showImage = false;
+    });
 
     if (isGameOver) {
       _showGameOverDialog();
@@ -106,11 +112,28 @@ class _GameStartedState extends State<GameStarted> {
       child: Scaffold(
         backgroundColor: Colors.transparent,
         body: Padding(
-          padding: const EdgeInsets.only(top: 60),
+          padding: const EdgeInsets.only(top: 5),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
+              SizedBox(
+                height: 230,
+                width: 220,
+                child: Card(
+                  elevation: 4,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  clipBehavior: Clip.hardEdge,
+                  child: Image.asset(
+                    showImage
+                        ? _gameService.currentSong.imagePath
+                        : 'assets/images/mark.png',
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
@@ -120,7 +143,7 @@ class _GameStartedState extends State<GameStarted> {
                       //Timer
                       CountdownTimer(
                         key: ValueKey(_gameService.currentIndex),
-                        duration: 20,
+                        duration: 15,
                         onFinished: () {
                           if (_gameService.selectedAnswer == '') {
                             _handleAnswer('');
@@ -128,25 +151,26 @@ class _GameStartedState extends State<GameStarted> {
                         },
                       )
                       : ElevatedButton(
-                        onPressed: _gameService.playCurrentSong,
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.white,
-                          foregroundColor: Colors.black,
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 20,
-                            vertical: 15,
+                          onPressed: _gameService.playCurrentSong,
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.orangeAccent,
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 10,
+                              vertical: 15,
+                            ),
                           ),
-                        ),
-                        child : SvgPicture.asset('assets/icons/music_replay.svg',
-                          height: 28,
-                          width: 28,
-                          colorFilter: const ColorFilter.mode(Colors.black, BlendMode.srcIn),)
-                        // child: const Icon(Icons.refresh_rounded, size: 28),
-                      ),
+                          child: SvgPicture.asset(
+                            'assets/icons/music_replay.svg',
+                            height: 30,
+                            width: 20,
+                            colorFilter: const ColorFilter.mode(
+                              Colors.black,
+                              BlendMode.srcIn,
+                            ),
+                          ),
+                  ),
                 ],
               ),
-              const SizedBox(height: 20),
-
               ..._gameService.possibleAnswers.map((song) {
                 return Padding(
                   padding: const EdgeInsets.symmetric(vertical: 10),
@@ -178,7 +202,7 @@ class _GameStartedState extends State<GameStarted> {
                   ),
                 );
               }).toList(),
-              const SizedBox(height: 40),
+              const SizedBox(height: 25),
               Text(
                 'Score: ${_gameService.score}/${_gameService.currentIndex + 1}',
                 style: const TextStyle(
