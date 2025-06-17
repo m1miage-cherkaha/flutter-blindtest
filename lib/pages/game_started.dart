@@ -118,18 +118,20 @@ class _GameStartedState extends State<GameStarted> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               SizedBox(
-                height : 230,
-                width : 220,
-                child : Card(
-                    elevation: 4,
-                    shape : RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(5)
-                    ),
-                    clipBehavior: Clip.hardEdge,
-                    child : Image.asset(
-                    showImage ? _gameService.currentSong.imagePath : 'assets/images/mark.png',
-                    fit : BoxFit.cover)
-
+                height: 230,
+                width: 220,
+                child: Card(
+                  elevation: 4,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  clipBehavior: Clip.hardEdge,
+                  child: Image.asset(
+                    showImage
+                        ? _gameService.currentSong.imagePath
+                        : 'assets/images/mark.png',
+                    fit: BoxFit.cover,
+                  ),
                 ),
               ),
               Row(
@@ -149,21 +151,24 @@ class _GameStartedState extends State<GameStarted> {
                         },
                       )
                       : ElevatedButton(
-                        onPressed: _gameService.playCurrentSong,
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.white,
-                          foregroundColor: Colors.black,
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 20,
-                            vertical: 15,
+                          onPressed: _gameService.playCurrentSong,
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.orangeAccent,
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 10,
+                              vertical: 15,
+                            ),
                           ),
-                        ),
-                        child : SvgPicture.asset('assets/icons/music_replay.svg',
-                          height: 28,
-                          width: 28,
-                          colorFilter: const ColorFilter.mode(Colors.black, BlendMode.srcIn),)
-                        // child: const Icon(Icons.refresh_rounded, size: 28),
-                      ),
+                          child: SvgPicture.asset(
+                            'assets/icons/music_replay.svg',
+                            height: 30,
+                            width: 20,
+                            colorFilter: const ColorFilter.mode(
+                              Colors.black,
+                              BlendMode.srcIn,
+                            ),
+                          ),
+                  ),
                 ],
               ),
               ..._gameService.possibleAnswers.map((song) {
