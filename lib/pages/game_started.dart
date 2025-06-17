@@ -166,8 +166,6 @@ class _GameStartedState extends State<GameStarted> {
                       ),
                 ],
               ),
-              const SizedBox(height: 20),
-
               ..._gameService.possibleAnswers.map((song) {
                 return Padding(
                   padding: const EdgeInsets.symmetric(vertical: 10),
@@ -199,7 +197,7 @@ class _GameStartedState extends State<GameStarted> {
                   ),
                 );
               }).toList(),
-              const SizedBox(height: 40),
+              const SizedBox(height: 25),
               Text(
                 'Score: ${_gameService.score}/${_gameService.currentIndex + 1}',
                 style: const TextStyle(
