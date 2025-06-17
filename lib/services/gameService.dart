@@ -58,7 +58,7 @@ class GameService {
       score++;
     }
 
-    await Future.delayed(Duration(seconds: 1));
+    await Future.delayed(Duration(milliseconds: 1500));
 
     if (currentIndex < maxQuestions - 1) {
       currentIndex++;
