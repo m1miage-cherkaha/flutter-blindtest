@@ -4,9 +4,10 @@ TuneBoom !
 
 ## Getting Started
 
-**Fonctionnalités à ajouter dans le future :** 
+**Amélioration dans le future :** 
 
-bouton indice dans le mode 'Facile' : donner des indices sur la chanson/artiste 
+- bouton indice dans le mode 'Facile' : donner des indices sur la chanson/artiste 
+- améliorer la modale jeu terminé
 
 **Ajout de nouveau mode :**
 
