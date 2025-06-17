@@ -63,7 +63,8 @@ flutter:
   assets:
     - assets/images/
     - assets/images/2000/
-    - assets/songs/rap/
+    - assets/images/pop/
+    - assets/songs/pop/
     - assets/songs/2000/
     - assets/icons/
 
