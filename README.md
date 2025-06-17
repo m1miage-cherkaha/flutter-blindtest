@@ -11,6 +11,6 @@ TuneBoom !
 
 **Ajout de nouveau mode :**
 
-Devinez le Genre/Catégory de la chansons ! 
+Devinez le Genre/Catégory de la chanson ! 
 
 Jouer contre un adversaire
